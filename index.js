@@ -27,9 +27,14 @@ const bookOptions = async (chatId, book, start) => {
   bot.sendMessage(chatId, 'Loading Please Wait...');
   try {
     const keyboard = await fetchData(book);
-    const message = keyboard.length
-      ? 'Select A Book!'
-      : 'Book Not Found please check your spelling!';
+    let message;
+    if (keyboard.length && start !== 'start') {
+      message = 'Select A Book!';
+    } else if (keyboard.length && start === 'start') {
+      message = 'Test Successfully!';
+    } else {
+      message = 'Book Not Found please check your spelling!';
+    }
 
     await bot.sendMessage(chatId, message, {
       reply_markup: {
