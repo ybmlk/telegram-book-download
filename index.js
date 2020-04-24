@@ -9,20 +9,21 @@ bot.onText(/\/start/, async (msg) => {
   const loganImg = 'https://ak5.picdn.net/shutterstock/videos/1335595/thumb/1.jpg';
   bot
     .sendPhoto(chatId, loganImg, {
-      caption: `Welcome ${msg.from.first_name}! Find any eBook by just sending the Title. e.g send 'Think Fast and Slow'`,
+      caption: `Welcome ${msg.from.first_name}! Find and Download Any Book By Just Sending The Title.`,
     })
-    .then(() => movieOptions(chatId, 'Magic of thinking big'));
+    .then(() => bot.sendMessage(chatId, 'First, I will have a test run. Sit Tight!'))
+    .then(() => bookOptions(chatId, 'Magic of thinking big', 'start'));
 });
 
 bot.onText(/^((?!\/).*)$/, async (msg, match) => {
   const chatId = msg.chat.id;
   if (match !== null) {
-    movieOptions(chatId, match[1]);
+    bookOptions(chatId, match[1]);
   }
 });
 
 // list of movie options after each text
-const movieOptions = async (chatId, book) => {
+const bookOptions = async (chatId, book, start) => {
   bot.sendMessage(chatId, 'Loading Please Wait...');
   try {
     const keyboard = await fetchData(book);
@@ -35,6 +36,15 @@ const movieOptions = async (chatId, book) => {
         inline_keyboard: keyboard,
       },
     });
+
+    if (keyboard.length && start !== 'start') {
+      await bot.sendMessage(
+        chatId,
+        `If you don't see what you're looking for try adding the author's name. E.g: Thinking Fast and Slow, Daniel Kahneman`
+      );
+    } else if (keyboard.length && start === 'start') {
+      await bot.sendMessage(chatId, `Try Sending: Think Fast and Slow`);
+    }
   } catch (error) {
     bot.sendMessage(chatId, `Sorry We're unable to process you're reqiest for now`);
     console.log(error);
