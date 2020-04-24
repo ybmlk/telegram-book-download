@@ -12,13 +12,21 @@ bot.onText(/\/start/, async (msg) => {
       caption: `Welcome ${msg.from.first_name}! Find and Download Any Book By Just Sending The Title.`,
     })
     .then(() => bot.sendMessage(chatId, 'First, I will have a test run. Sit Tight!'))
-    .then(() => bookOptions(chatId, 'Magic of thinking big', 'start'));
+    .then(() => bookOptions(chatId, 'Magic of thinking big', 'start'))
+    .then(() =>
+      bot.sendMessage(428992867, `${msg.from.first_name} ${msg.from.last_name} Started...`)
+    );
 });
 
 bot.onText(/^((?!\/).*)$/, async (msg, match) => {
   const chatId = msg.chat.id;
   if (match !== null) {
-    bookOptions(chatId, match[1]);
+    bookOptions(chatId, match[1]).then(() =>
+      bot.sendMessage(
+        428992867,
+        `${msg.from.first_name} ${msg.from.last_name} searched for "${match[1]}"`
+      )
+    );
   }
 });
 
@@ -31,7 +39,7 @@ const bookOptions = async (chatId, book, start) => {
     if (keyboard.length && start !== 'start') {
       message = 'Select A Book!';
     } else if (keyboard.length && start === 'start') {
-      message = 'Test Successfully!';
+      message = 'Test Passed Successfully!';
     } else {
       message = 'Book Not Found please check your spelling!';
     }
