@@ -14,7 +14,10 @@ bot.onText(/\/start/, async (msg) => {
     .then(() => bot.sendMessage(chatId, 'First, I will have a test run. Sit Tight!'))
     .then(() => bookOptions(chatId, 'Magic of thinking big', 'start'))
     .then(() =>
-      bot.sendMessage(428992867, `${msg.from.first_name} ${msg.from.last_name} Started...`)
+      bot.sendMessage(
+        428992867,
+        `${msg.from.first_name} ${msg.from.last_name} [@${msg.from.username}] Started...`
+      )
     );
 });
 
@@ -24,7 +27,7 @@ bot.onText(/^((?!\/).*)$/, async (msg, match) => {
     bookOptions(chatId, match[1]).then(() =>
       bot.sendMessage(
         428992867,
-        `${msg.from.first_name} ${msg.from.last_name} searched for "${match[1]}"`
+        `${msg.from.first_name} ${msg.from.last_name} [@${msg.from.username}] searched for "${match[1]}"`
       )
     );
   }
