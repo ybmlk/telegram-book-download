@@ -88,9 +88,9 @@ const fetchData = async (book) => {
       const collect = [
         {
           text: `(${data[n].extension}) ${data[n].title}`,
-          url: `http://80.82.78.13/get.php?md5=${data[
+          url: `http://80.82.78.35/get.php?md5=${data[
             n
-          ].md5.toLowerCase()}&key=SYD6F4100GCKLTVO&mirr=1`,
+          ].md5.toLowerCase()}&key=S2NWTD621CJ0BAX9&mirr=1`,
         },
       ];
 
