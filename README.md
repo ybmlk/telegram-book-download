@@ -1,4 +1,4 @@
-# Path Finding Visualizer
+# Telegram Book Download Bot
 
 ### Table of Contents
 
