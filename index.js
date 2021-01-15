@@ -1,5 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
-const token = '1140531263:AAGXozLmBq1esFTRvt7bZG2kavY7-g4kcwA';
+require('dotenv').config();
+const token = process.env.TELEGRAM_ACCESS_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 const libgen = require('libgen');
 let keyboard;
