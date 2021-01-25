@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const token = process.env.TELEGRAM_ACCESS_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
-let keyboard;
+
 // /Start
 bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
@@ -35,20 +35,19 @@ bot.onText(/^((?!\/).*)$/, async (msg, match) => {
   }
 });
 
-// list of movie options after each text
-const bookOptions = async (chatId, book, start) => {
+const bookOptions = async (chatId, bookTitle, start) => {
   bot.sendMessage(chatId, 'Loading Please Wait...');
   try {
-    const keyboard = await fetchData(book);
+    const booksArray = (await fetchData(bookTitle)) || [];
 
-    for (let { title, downloadUrl, imageUrl } of keyboard) {
+    for (let { title, downloadUrl, imageUrl } of booksArray) {
       await bot.sendPhoto(chatId, imageUrl, {
         caption: `<a href="${downloadUrl}"><strong>${title}</strong></a>`,
         parse_mode: 'HTML',
       });
     }
 
-    if (keyboard.length) {
+    if (booksArray.length) {
       if (!start) {
         await bot.sendMessage(
           chatId,
@@ -64,7 +63,7 @@ const bookOptions = async (chatId, book, start) => {
       await bot.sendMessage(chatId, `Book Not Found please check your spelling!`);
     }
   } catch (error) {
-    bot.sendMessage(chatId, `Sorry We're unable to process you're reqiest for now`);
+    bot.sendMessage(chatId, `Sorry We're unable to process you're request`);
     console.log(error);
   }
 };
@@ -81,7 +80,7 @@ const fetchData = async (bookTitle) => {
     };
 
     const listOfBooks = await libgen.search(options);
-    let keyboard = [];
+    const booksArray = [];
 
     for (let book of listOfBooks) {
       let imageUrl = 'http://libgen.rs/covers/';
@@ -98,9 +97,9 @@ const fetchData = async (bookTitle) => {
         downloadUrl: `http://80.82.78.35/get.php?md5=${book.md5.toLowerCase()}&key=S2NWTD621CJ0BAX9&mirr=1`,
         imageUrl,
       };
-      keyboard.push(details);
+      booksArray.push(details);
     }
-    return keyboard;
+    return booksArray;
   } catch (error) {
     console.log(error);
     //=> 'Internal server error ...'
